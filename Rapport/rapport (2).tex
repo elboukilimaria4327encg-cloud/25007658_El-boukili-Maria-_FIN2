@@ -1,0 +1,460 @@
+% =====================================================================
+%  RAPPORT À COMPLÉTER
+%  Examen individuel (Partie B) : projet de science des données
+%  appliqué à la finance. S7 FIN et CI, cours BD & DS, ENCG-2026.
+%
+%  Mode d'emploi
+%  1. Remplacez chaque \acompleter{...} (texte rouge) et chaque
+%     \acel{...} (cellule rouge) par votre contenu. Rien ne doit rester
+%     en rouge dans la version remise. Après chaque compilation, le
+%     journal indique le nombre d'éléments qui restent à compléter.
+%  2. Compilez avec pdfLaTeX (sur Overleaf : compilateur pdfLaTeX).
+%     Compilez deux fois pour mettre à jour les renvois et les citations.
+%  3. Les figures sont cherchées dans ../figures/ puis dans figures/.
+%     Tant qu'une figure manque, un cadre la remplace : le document
+%     compile toujours. Sur Overleaf, créez un dossier figures/ et
+%     téléversez-y vos images.
+%  4. Citations : chaque source de la liste « Références et citations »
+%     a une clé (par exemple lie1). Citez-la dans le texte avec \cite{lie1}.
+%  5. Longueur : celle fixée par l'énoncé. Les lignes qui commencent
+%     par % sont des aides : vous pouvez les supprimer.
+%  6. Caractères spéciaux : écrivez \_ pour un tiret bas (par exemple
+%     \texttt{n\_estimators}), \% pour un pourcentage, \& pour &.
+%  7. Page de garde : placez le logo officiel de l'ENCG Settat, nommé
+%     logo_encg_settat.png, à côté de rapport.tex (ou dans figures/).
+%     Tant qu'il manque, un cadre le remplace.
+%  8. Votre photo (format identité) : placez-la à côté de rapport.tex,
+%     nommée photo_etudiant.jpg ou photo_etudiant.png. Tant qu'elle
+%     manque, un cadre la remplace.
+%  9. Lien GitHub : remplacez l'adresse dans la commande \lienDepot
+%     ci-dessous (une seule fois). Il s'affiche sur la page de garde et
+%     en annexe, en rouge tant qu'il n'est pas modifié.
+% 10. Remettez rapport.tex, rapport.pdf, le logo et la photo dans le
+%     dossier rapport/ de votre dépôt CodeApogee-Nom-Groupe.
+% =====================================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[french]{babel}
+\frenchsetup{StandardLists=true}
+\usepackage[margin=1.8cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[labelsep=colon]{caption}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage[hidelinks]{hyperref}
+
+% ========== Mise en page et commandes du gabarit (ne pas modifier) ==========
+\addto\captionsfrench{%
+  \renewcommand{\tablename}{Tableau}%
+  \renewcommand{\refname}{Références et citations}}
+\setlist{itemsep=1pt,topsep=3pt}
+\setlength{\emergencystretch}{2em}
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+  {1.2ex \@plus 0.4ex \@minus 0.2ex}{-1em}{\normalfont\normalsize\bfseries}}
+\makeatother
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\newcounter{nbacompleter}
+\DeclareRobustCommand{\acompleter}[1]{%
+  \stepcounter{nbacompleter}\textcolor{red}{\textit{[À compléter : #1]}}}
+\DeclareRobustCommand{\acel}[1]{%
+  \stepcounter{nbacompleter}\textcolor{red}{\textit{#1}}}
+% \insererfigure{fichier}{légende}{étiquette}
+\newcommand{\insererfigure}[3]{%
+  \begin{figure}[htbp]
+    \centering
+    \IfFileExists{../figures/#1}{\includegraphics[width=0.62\linewidth]{../figures/#1}}{%
+      \IfFileExists{figures/#1}{\includegraphics[width=0.62\linewidth]{figures/#1}}{%
+        \fbox{\parbox[c][2.4cm][c]{0.6\linewidth}{\centering\small
+          Figure à insérer : \texttt{figures/\detokenize{#1}}}}}}
+    \caption{#2}
+    \label{#3}
+  \end{figure}}
+% ---------- VOTRE LIEN GITHUB : remplacez l'adresse ci-dessous ----------
+\newcommand{\lienDepot}{https://github.com/identifiant/CodeApogee-Nom-Groupe}
+% -------------------------------------------------------------------------
+\newcommand{\lienParDefaut}{https://github.com/identifiant/CodeApogee-Nom-Groupe}
+\newcommand{\afficherlien}{%
+  \ifx\lienDepot\lienParDefaut
+    \stepcounter{nbacompleter}\textcolor{red}{\expandafter\url\expandafter{\lienDepot}}%
+  \else
+    \expandafter\url\expandafter{\lienDepot}%
+  \fi}
+% Photo de l'étudiant(e) : photo_etudiant.jpg ou photo_etudiant.png
+\newcommand{\photo}[1]{\includegraphics[width=3.5cm,height=4.5cm,keepaspectratio]{#1}}
+\newcommand{\insererphoto}{%
+  \IfFileExists{photo_etudiant.jpg}{\photo{photo_etudiant.jpg}}{%
+    \IfFileExists{photo_etudiant.png}{\photo{photo_etudiant.png}}{%
+      \fbox{\parbox[c][4.5cm][c]{3.5cm}{\centering\small\textcolor{red}{\textit{Photo de\\ l'étudiant(e)}}\\[4pt]
+        \scriptsize\texttt{photo\_etudiant.jpg}}}}}}
+% Logos de la page de garde : déposez les deux fichiers à côté de rapport.tex
+% (ou dans figures/). Modifiez les noms ci-dessous si vos fichiers s'appellent autrement.
+\newcommand{\fichierlogouniv}{logo_universite_hassan1.png}
+\newcommand{\fichierlogo}{logo_encg_settat.png}
+% \chercherimage{fichier}{options}{largeur du cadre}{hauteur du cadre}{texte du cadre}
+\newcommand{\chercherimage}[5]{%
+  \IfFileExists{#1}{\includegraphics[#2]{#1}}{%
+    \IfFileExists{figures/#1}{\includegraphics[#2]{figures/#1}}{%
+      \IfFileExists{../figures/#1}{\includegraphics[#2]{../figures/#1}}{%
+        \fbox{\parbox[c][#4][c]{#3}{\centering\small #5\\[2pt]
+          \tiny\texttt{\detokenize\expandafter{#1}}}}}}}}
+\newcommand{\insererlogouniv}{\chercherimage{\fichierlogouniv}{height=1.9cm}{5.2cm}{1.9cm}{Logo de l'Université Hassan 1\ier}}
+\newcommand{\insererlogo}{\chercherimage{\fichierlogo}{height=2.5cm}{2.5cm}{2.5cm}{Logo de l'ENCG Settat}}
+\AtEndDocument{\ifnum\value{nbacompleter}>0
+  \typeout{ATTENTION : il reste \arabic{nbacompleter} élément(s) à compléter.}\fi}
+% ===========================================================================
+
+\begin{document}
+
+% =====================================================================
+%  PAGE DE GARDE
+% =====================================================================
+\begin{titlepage}
+  \centering
+  \noindent
+  \begin{minipage}[c]{0.5\linewidth}\raggedright\insererlogouniv\end{minipage}%
+  \begin{minipage}[c]{0.5\linewidth}\raggedleft\insererlogo\end{minipage}\par
+  \vspace{0.9cm}
+  {\large Université Hassan 1\ier{} de Settat}\par
+  \vspace{0.2cm}
+  {\Large\bfseries École Nationale de Commerce et de Gestion de Settat}\par
+  \vspace{0.1cm}
+  {\large ENCG Settat}\par
+  \vspace{1.6cm}
+  \rule{\linewidth}{0.8pt}\par
+  \vspace{0.5cm}
+  {\large Cours BD \& DS : examen individuel (Partie B)}\par
+  \vspace{0.3cm}
+  {\Large Rapport de projet de science des données appliqué à la finance}\par
+  \vspace{0.7cm}
+  {\LARGE\bfseries F22 : Anticipations d'inflation des marchés}\par
+  \vspace{0.5cm}
+  \rule{\linewidth}{0.8pt}\par
+  \vfill
+  \begin{minipage}[c]{0.66\linewidth}
+  \large
+  \begin{tabular}{@{}ll@{}}
+    Réalisé par          & Houda El Idrissi \\[3pt]
+    Code Apogée          & \acel{code Apogée} \\[3pt]
+    Groupe et filière    & \acel{groupe}, S7 FIN \\[3pt]
+    Algorithme principal & \acel{numéro (annexe A de l'énoncé)} : régression Ridge avec retards \\[3pt]
+    Enseignant(e)        & \acel{nom de l'enseignant(e)} \\[3pt]
+  \end{tabular}
+  \end{minipage}\hfill
+  \begin{minipage}[c]{0.3\linewidth}
+    \centering\insererphoto
+  \end{minipage}\par
+  \vspace{0.8cm}
+  {\large\textbf{Dépôt GitHub :} \afficherlien}\par
+  \vfill
+  {\large Année universitaire 2026-2027}\par
+  \vspace{0.2cm}
+  Remis le \today
+\end{titlepage}
+
+% =====================================================================
+\section{Introduction}
+\label{sec:introduction}
+% =====================================================================
+\paragraph{Contexte.} Les anticipations d'inflation influencent la politique monétaire, la fixation des salaires et l'allocation d'actifs. Le taux d'inflation implicite à dix ans (\emph{breakeven}), écart entre le rendement d'une obligation nominale et celui d'une obligation indexée de même maturité, en est une mesure observable chaque jour sur les marchés. Gérants obligataires, trésoriers et analystes s'en servent pour décider de leur couverture contre l'inflation ou de l'indexation de leurs engagements.
+
+\paragraph{Problématique.} Le taux d'inflation implicite à dix ans (T10YIE) prédit-il l'inflation américaine réalisée douze mois plus tard, et mieux qu'une règle naïve fondée sur la dernière inflation observée ?
+
+\paragraph{Objectif mesurable.} Réduire l'erreur quadratique moyenne (RMSE, en points de pourcentage) de la prévision de l'inflation à douze mois par rapport à la référence naïve « dernière inflation observée », sur un jeu de test chronologique \acompleter{période de test}. Seuil de réussite fixé avant les résultats : \acompleter{seuil, par exemple RMSE du modèle inférieur à celui de la référence}.
+
+\paragraph{Nature du problème.} Régression supervisée sur série temporelle : la cible (l'inflation à douze mois) est une variable continue et l'ordre chronologique des observations doit être respecté.
+
+\paragraph{Organisation du rapport.} La section~\ref{sec:etat} présente l'état de l'art et la section~\ref{sec:travaux} les travaux liés. Les sections~\ref{sec:donnees} à~\ref{sec:protocole} décrivent les données, leur exploration, leur préparation, l'algorithme retenu et le protocole expérimental. La section~\ref{sec:resultats} présente les résultats, discutés en section~\ref{sec:discussion}, avant la conclusion (section~\ref{sec:conclusion}).
+
+% =====================================================================
+\section{État de l'art}
+\label{sec:etat}
+% =====================================================================
+La prévision de l'inflation s'appuie sur trois grandes familles de méthodes. La première est la règle naïve : prolonger l'inflation récente, qui s'est montrée difficile à battre par des modèles plus élaborés \cite{atk2001}. La deuxième regroupe les approches économétriques classiques (modèles autorégressifs, courbe de Phillips), dont la capacité prédictive varie fortement selon la période \cite{etat1}. La troisième mobilise l'information de marché et l'apprentissage automatique, notamment les régressions régularisées comme Ridge \cite{hoerl1970}, qui limitent le surapprentissage lorsque les variables explicatives sont corrélées. Le tableau~\ref{tab:etat} résume ces approches.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Panorama des approches pour ce type de problème}
+  \label{tab:etat}
+  \small
+  \begin{tabular}{@{}P{3cm} P{4.3cm} P{3.5cm} P{3.5cm} l@{}}
+    \toprule
+    Approche & Principe & Atouts & Limites & Réf. \\
+    \midrule
+    Référence naïve & Prévoir l'inflation future par la dernière inflation observée & Simple, sans estimation & Ignore toute information nouvelle & \cite{atk2001} \\
+    Approche classique & Modèle autorégressif ou courbe de Phillips estimés par moindres carrés & Interprétable, fondé en théorie économique & Instabilité des coefficients selon la période & \cite{etat1} \\
+    Apprentissage automatique & Régression régularisée (Ridge) sur des variables de marché retardées & Contrôle de la variance, gère la colinéarité & Hyperparamètre à régler, interprétation moins directe & \cite{hoerl1970,sklearn} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% =====================================================================
+\section{Travaux liés}
+\label{sec:travaux}
+% =====================================================================
+\begin{table}[htbp]
+  \centering
+  \caption{Travaux liés}
+  \label{tab:travaux}
+  \small
+  \begin{tabular}{@{}P{2.4cm} P{2.8cm} P{2.8cm} P{3.4cm} P{3.8cm}@{}}
+    \toprule
+    Travail & Données & Méthode & Résultat principal & Différence avec ce travail \\
+    \midrule
+    Ang, Bekaert et Wei, 2007 \cite{lie1} & Inflation américaine, séries macroéconomiques, actifs financiers et enquêtes & Comparaison de prévisions hors échantillon (ARMA, courbe de Phillips, structure par terme, enquêtes) & Les prévisions d'enquêtes sont les meilleures ; l'information de marché seule est moins performante & Ici, un seul indicateur de marché (T10YIE) est testé contre une règle naïve, avec Ridge \\
+    Gürkaynak, Sack et Wright, 2010 \cite{lie2} & Obligations indexées et nominales américaines & Estimation de la courbe de compensation de l'inflation & Le taux implicite mêle anticipations, prime de risque d'inflation et effets de liquidité & Ici, le taux implicite est utilisé tel que publié, sans corriger ces primes \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Positionnement.} Ce travail reprend l'idée de tester la valeur prédictive d'un indicateur de marché \cite{lie1} et la mise en garde sur la nature du taux implicite \cite{lie2}. Il apporte une évaluation chronologique simple, sur la période depuis 2003, face à une référence naïve.
+
+% =====================================================================
+\section{Jeu de données}
+\label{sec:donnees}
+% =====================================================================
+\begin{itemize}
+  \item \textbf{Nom et source :} taux d'inflation implicite à dix ans (T10YIE) et indice des prix à la consommation (CPIAUCSL), Federal Reserve Bank of St.~Louis (FRED) \cite{donnees}, \url{https://fred.stlouisfed.org/series/T10YIE}
+  \item \textbf{Date d'extraction :} \acompleter{jj/mm/aaaa}
+  \item \textbf{Licence ou conditions d'utilisation :} \acompleter{licence, ou « non précisée par la source »}
+  \item \textbf{Taille :} \acompleter{nombre} observations et \acompleter{nombre} variables, de janvier 2003 à \acompleter{fin}, fréquence quotidienne pour T10YIE et mensuelle pour CPIAUCSL.
+  \item \textbf{Unité d'observation :} un mois, après alignement des deux séries.
+  \item \textbf{Variable cible :} inflation réalisée à douze mois, $\pi_{t\to t+12} = 100\,\bigl(\mathrm{CPI}_{t+12}/\mathrm{CPI}_t - 1\bigr)$.
+  \item \textbf{Adéquation :} T10YIE résume les anticipations d'inflation des marchés ; CPIAUCSL fournit l'inflation réalisée à laquelle ces anticipations sont confrontées.
+  \item \textbf{Limites :} T10YIE porte sur dix ans alors que la cible porte sur douze mois ; il contient des primes de risque et de liquidité \cite{lie2} ; les cibles à douze mois se chevauchent d'un mois à l'autre, ce qui autocorrèle les erreurs ; la période inclut des épisodes atypiques (crise de 2008, pandémie, hausse des prix de 2021-2023) ; \acompleter{valeurs manquantes constatées}.
+\end{itemize}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Dictionnaire des principales variables}
+  \label{tab:dictionnaire}
+  \small
+  \begin{tabular}{@{}l P{5.6cm} l l l c@{}}
+    \toprule
+    Variable & Description & Type & Unité & Rôle & Manquants (\%) \\
+    \midrule
+    \texttt{DATE} & Mois d'observation & date & mois & date & \acel{0} \\
+    \texttt{T10YIE} & Taux d'inflation implicite à dix ans (moyenne mensuelle) & numérique & \% & explicative & \acel{0} \\
+    \texttt{CPIAUCSL} & Indice des prix à la consommation, ensemble des ménages urbains, désaisonnalisé & numérique & indice & source de la cible & \acel{0} \\
+    \texttt{infl\_obs} & $100\,(\mathrm{CPI}_t/\mathrm{CPI}_{t-12} - 1)$ : inflation observée sur les douze derniers mois & numérique & \% & explicative, référence & \acel{0} \\
+    \texttt{T10YIE\_lag}$k$ & T10YIE retardé de $k$ mois & numérique & \% & explicative & \acel{0} \\
+    \texttt{cible} & $\pi_{t\to t+12}$, inflation réalisée douze mois plus tard & numérique & \% & cible & \acel{0} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% =====================================================================
+\section{Exploration}
+\label{sec:exploration}
+% =====================================================================
+\paragraph{Statistiques descriptives.} \acompleter{moyenne, écart-type, minimum et maximum de T10YIE et de l'inflation à douze mois, corrélation entre les deux}
+
+\paragraph{Qualité des données.} Les jours sans cotation apparaissent comme valeurs manquantes dans la série quotidienne ; l'agrégation en moyenne mensuelle les neutralise. \acompleter{valeurs atypiques détectées et décision : en finance, une valeur extrême est souvent réelle, elle est donc conservée}
+
+\insererfigure{fig1_t10yie_inflation.png}{\acompleter{titre : T10YIE et inflation réalisée, depuis 2003}}{fig:1}
+
+\noindent\textbf{Lecture de la figure~\ref{fig:1}.} \acompleter{ce que montre la figure : niveau et évolution comparés des deux séries, épisodes marquants}
+
+\insererfigure{fig2_nuage_t10yie_cible.png}{\acompleter{titre : nuage de points T10YIE contre inflation réalisée à douze mois}}{fig:2}
+
+\noindent\textbf{Lecture de la figure~\ref{fig:2}.} \acompleter{force et signe de la relation, dispersion}
+
+% =====================================================================
+\section{Préparation}
+\label{sec:preparation}
+% =====================================================================
+\begin{itemize}
+  \item \textbf{Nettoyage :} agrégation de T10YIE en moyenne mensuelle, puis fusion avec CPIAUCSL sur la date.
+  \item \textbf{Variables créées :} inflation observée sur douze mois, retards de T10YIE et cible à douze mois ; formules dans le tableau~\ref{tab:dictionnaire}.
+  \item \textbf{Encodage et mise à l'échelle :} aucun encodage (variables numériques) ; standardisation des variables explicatives, nécessaire car la pénalisation Ridge dépend de l'échelle.
+\end{itemize}
+
+\paragraph{Prévention des fuites.}
+\begin{itemize}
+  \item[$\boxtimes$] Transformations ajustées sur l'apprentissage seulement, dans un \texttt{Pipeline}.
+  \item[$\boxtimes$] Découpage chronologique, sans mélange (données datées).
+  \item[$\boxtimes$] Variables construites avec le passé seulement ; écart de $h=12$ observations car la cible porte sur un horizon de douze mois.
+  \item[$\boxtimes$] Aucune variable ne contient la cible, même indirectement.
+  \item[$\boxtimes$] Jeu de test utilisé une seule fois, à la fin.
+\end{itemize}
+\acompleter{vérification de l'alignement des dates : afficher quelques lignes date, variables, cible}
+
+% =====================================================================
+\section{Algorithme}
+\label{sec:algorithme}
+% =====================================================================
+\paragraph{Choix.} Régression Ridge avec retards (algorithme \acompleter{numéro, annexe A de l'énoncé}). Les retards de T10YIE sont fortement corrélés entre eux ; la pénalisation de Ridge stabilise les coefficients dans ce cas \cite{hoerl1970}, conformément à l'état de l'art (tableau~\ref{tab:etat}). La régression linéaire simple, sans pénalisation, a été écartée comme modèle final car elle est instable en présence de retards colinéaires ; elle sert de point de comparaison. \acompleter{ajuster si la régression linéaire est présentée comme modèle intermédiaire}
+
+\paragraph{Principe.} Le modèle prévoit l'inflation à douze mois comme une combinaison linéaire du taux implicite courant, de ses retards et de l'inflation observée, en pénalisant la taille des coefficients. L'implémentation utilise \texttt{Ridge} de scikit-learn \cite{sklearn}.
+
+\paragraph{Formule essentielle.}
+\begin{equation}
+  \hat{\beta} = \arg\min_{\beta}\; \sum_{t=1}^{n} \bigl(y_t - \beta_0 - \mathbf{x}_t^{\top}\beta\bigr)^2 + \alpha \sum_{j=1}^{p}\beta_j^2
+  \label{eq:principale}
+\end{equation}
+où $y_t$ est l'inflation réalisée à douze mois, $\mathbf{x}_t$ le vecteur des variables explicatives (T10YIE, ses retards, l'inflation observée), $\beta_0$ la constante, $\beta_j$ les coefficients, $n$ le nombre d'observations d'apprentissage, $p$ le nombre de variables et $\alpha \geq 0$ l'intensité de la pénalisation.
+
+\paragraph{Paramètres appris.} La constante $\beta_0$ et les coefficients $\beta_j$ ; $\alpha$ n'est pas appris mais choisi par validation.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Hyperparamètres étudiés}
+  \label{tab:hyper}
+  \small
+  \begin{tabular}{@{}l P{6.4cm} l l@{}}
+    \toprule
+    Hyperparamètre & Rôle et effet attendu & Valeurs testées & Valeur retenue \\
+    \midrule
+    \texttt{alpha} & Intensité de la pénalisation : plus elle est forte, plus la variance baisse et le biais augmente & \acel{valeurs} & \acel{valeur} \\
+    nombre de retards & Mémoire du taux implicite intégrée au modèle & \acel{valeurs} & \acel{valeur} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% =====================================================================
+\section{Protocole expérimental}
+\label{sec:protocole}
+% =====================================================================
+\begin{table}[htbp]
+  \centering
+  \caption{Découpage des données}
+  \label{tab:decoupage}
+  \small
+  \begin{tabular}{@{}l l r@{}}
+    \toprule
+    Ensemble & Période ou proportion & Observations \\
+    \midrule
+    Apprentissage & \acel{du ... au ...} & \acel{n} \\
+    Validation & validation croisée chronologique sur l'apprentissage & \acel{n} \\
+    Test & \acel{du ... au ...} & \acel{n} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{itemize}
+  \item \textbf{Référence naïve :} la prévision est la dernière inflation observée sur douze mois, $\hat{\pi}_{t\to t+12} = \pi_{t-12\to t}$. Elle est pertinente car l'inflation est persistante et cette règle est difficile à battre \cite{atk2001}.
+  \item \textbf{Validation :} \texttt{TimeSeriesSplit}, \acompleter{nombre de plis} plis, \acompleter{nombre de configurations essayées} configurations.
+  \item \textbf{Métrique principale :} RMSE à douze mois, en points de pourcentage ; elle mesure l'écart quadratique moyen entre prévision et inflation réalisée et pénalise davantage les grosses erreurs.
+  \item \textbf{Métrique secondaire :} biais moyen (prévision moins réalisé), qui indique une sur- ou sous-estimation systématique.
+  \item \textbf{Graine aléatoire :} 42.
+\end{itemize}
+
+% =====================================================================
+\section{Résultats}
+\label{sec:resultats}
+% =====================================================================
+\begin{table}[htbp]
+  \centering
+  \caption{Comparaison de la référence naïve et du modèle}
+  \label{tab:resultats}
+  \small
+  \begin{tabular}{@{}l cc cc@{}}
+    \toprule
+    & \multicolumn{2}{c}{RMSE (points de \%)} & \multicolumn{2}{c}{Biais moyen (points de \%)} \\
+    \cmidrule(lr){2-3}\cmidrule(lr){4-5}
+    Modèle & Validation & Test & Validation & Test \\
+    \midrule
+    Référence : dernière inflation observée & \acel{0,00 $\pm$ 0,00} & \acel{0,00} & \acel{0,00 $\pm$ 0,00} & \acel{0,00} \\
+    Régression linéaire sur T10YIE & \acel{0,00 $\pm$ 0,00} & \acel{0,00} & \acel{0,00 $\pm$ 0,00} & \acel{0,00} \\
+    Ridge avec retards & \acel{0,00 $\pm$ 0,00} & \acel{0,00} & \acel{0,00 $\pm$ 0,00} & \acel{0,00} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\insererfigure{fig3_anticipations_vs_realise.png}{\acompleter{titre : anticipations des marchés et inflation réalisée à douze mois}}{fig:3}
+
+\paragraph{Lecture des résultats.} \acompleter{comparaison chiffrée avec la référence (tableau~\ref{tab:resultats}) et lecture de la figure~\ref{fig:3}}
+
+\paragraph{Analyse des erreurs.} \acompleter{périodes où le modèle se trompe le plus, par exemple 2021-2022}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Prédictions sur des observations non utilisées pour l'apprentissage}
+  \label{tab:illustration}
+  \small
+  \begin{tabular}{@{}l l l P{7cm}@{}}
+    \toprule
+    Observation & Prédiction & Valeur réelle & Commentaire \\
+    \midrule
+    \acel{mois} & \acel{valeur} & \acel{valeur} & \acel{commentaire} \\
+    \acel{mois} & \acel{valeur} & \acel{valeur} & \acel{commentaire} \\
+    \acel{mois} & \acel{valeur} & \acel{valeur} & \acel{commentaire} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% =====================================================================
+\section{Discussion des résultats}
+\label{sec:discussion}
+% =====================================================================
+\paragraph{Réponse à l'objectif.} L'objectif fixé dans l'introduction est \acompleter{atteint ou non atteint}, car \acompleter{justification chiffrée à partir du tableau~\ref{tab:resultats}}.
+
+\paragraph{Interprétation.} \acompleter{pourquoi le modèle fait mieux ou moins bien que la référence ; la relation observée est une association statistique, non une causalité}
+
+\paragraph{Surapprentissage et généralisation.} \acompleter{RMSE d'apprentissage contre RMSE de test, stabilité selon la sous-période}
+
+\paragraph{Comparaison avec les travaux liés.} \acompleter{vos résultats confirment-ils ou contredisent-ils ceux du tableau~\ref{tab:travaux} ? Pourquoi ?}
+
+\paragraph{Limites et biais.} L'écart entre l'horizon du taux implicite (dix ans) et celui de la cible (douze mois), les primes contenues dans le taux implicite \cite{lie2}, le chevauchement des cibles et la période couverte (depuis 2003) limitent la portée des résultats.
+
+\paragraph{Pistes d'amélioration.} \acompleter{deux pistes concrètes, par exemple ajouter une mesure d'anticipation à horizon plus court, ou comparer avec des prévisions d'enquêtes}
+
+% =====================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+% =====================================================================
+\acompleter{réponse directe à la problématique avec le RMSE de test du modèle et de la référence, apport du travail, perspective}
+
+% =====================================================================
+%  RÉFÉRENCES ET CITATIONS
+% =====================================================================
+\begin{thebibliography}{9}
+  \bibitem{donnees} Federal Reserve Bank of St.~Louis, FRED, « 10-Year Breakeven Inflation Rate (T10YIE) » et « Consumer Price Index for All Urban Consumers: All Items (CPIAUCSL) », \url{https://fred.stlouisfed.org/series/T10YIE}, consulté le \acompleter{jj/mm/aaaa}.
+  \bibitem{etat1} J.~H. Stock et M.~W. Watson, « Why Has U.S. Inflation Become Harder to Forecast? », \textit{Journal of Money, Credit and Banking}, vol.~39, suppl.~1, p.~3-33, 2007.
+  \bibitem{atk2001} A.~Atkeson et L.~E. Ohanian, « Are Phillips Curves Useful for Forecasting Inflation? », \textit{Federal Reserve Bank of Minneapolis Quarterly Review}, vol.~25, n\textsuperscript{o}~1, p.~2-11, 2001.
+  \bibitem{hoerl1970} A.~E. Hoerl et R.~W. Kennard, « Ridge Regression: Biased Estimation for Nonorthogonal Problems », \textit{Technometrics}, vol.~12, n\textsuperscript{o}~1, p.~55-67, 1970.
+  \bibitem{lie1} A.~Ang, G.~Bekaert et M.~Wei, « Do Macro Variables, Asset Markets, or Surveys Forecast Inflation Better? », \textit{Journal of Monetary Economics}, vol.~54, n\textsuperscript{o}~4, p.~1163-1212, 2007.
+  \bibitem{lie2} R.~S. Gürkaynak, B.~Sack et J.~H. Wright, « The TIPS Yield Curve and Inflation Compensation », \textit{American Economic Journal: Macroeconomics}, vol.~2, n\textsuperscript{o}~1, p.~70-92, 2010.
+  \bibitem{sklearn} F.~Pedregosa \textit{et al.}, « Scikit-learn: Machine Learning in Python », \textit{Journal of Machine Learning Research}, vol.~12, p.~2825-2830, 2011.
+  \bibitem{support} Support du cours BD \& DS, notebook \texttt{Tp\_ML.ipynb}, ENCG-2026.
+\end{thebibliography}
+
+% =====================================================================
+%  ANNEXES
+% =====================================================================
+\appendix
+
+\section{Reproduction}
+\label{ann:reproduction}
+Version corrigée : étiquette \texttt{remise-finale} du dépôt \afficherlien.
+\begin{enumerate}
+  \item Cloner le dépôt : \texttt{git clone} suivi du lien ci-dessus.
+  \item Installer les dépendances : \texttt{pip install -r requirements.txt}.
+  \item Exécuter \texttt{notebooks/\acel{F22\_CodeApogee}.ipynb} avec « Redémarrer et tout exécuter ».
+\end{enumerate}
+
+\section{Déclaration des outils d'IA}
+\label{ann:ia}
+\begin{table}[htbp]
+  \centering
+  \caption{Ressources et outils d'IA utilisés}
+  \label{tab:ia}
+  \small
+  \begin{tabular}{@{}P{3cm} P{4.8cm} P{3.3cm} P{4.4cm}@{}}
+    \toprule
+    Outil ou ressource & Usage précis & Parties concernées & Vérification effectuée \\
+    \midrule
+    Claude (Anthropic), novembre 2026 & Aide à l'écriture du code du notebook, explications des étapes, mise en forme du rapport & \acel{sections} & \acel{vérification} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\end{document}
