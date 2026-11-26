@@ -1,0 +1,544 @@
+% =====================================================================
+%  RAPPORT À COMPLÉTER
+%  Examen individuel (Partie B) : projet de science des données
+%  appliqué à la finance. S7 FIN et CI, cours BD & DS, ENCG-2026.
+%
+%  Mode d'emploi
+%  1. Remplacez chaque \acompleter{...} (texte rouge) et chaque
+%     \acel{...} (cellule rouge) par votre contenu. Rien ne doit rester
+%     en rouge dans la version remise. Après chaque compilation, le
+%     journal indique le nombre d'éléments qui restent à compléter.
+%  2. Compilez avec pdfLaTeX (sur Overleaf : compilateur pdfLaTeX).
+%     Compilez deux fois pour mettre à jour les renvois et les citations.
+%  3. Les figures sont cherchées dans ../figures/ puis dans figures/.
+%     Tant qu'une figure manque, un cadre la remplace : le document
+%     compile toujours. Sur Overleaf, créez un dossier figures/ et
+%     téléversez-y vos images.
+%  4. Citations : chaque source de la liste « Références et citations »
+%     a une clé (par exemple lie1). Citez-la dans le texte avec \cite{lie1}.
+%  5. Longueur : celle fixée par l'énoncé. Les lignes qui commencent
+%     par % sont des aides : vous pouvez les supprimer.
+%  6. Caractères spéciaux : écrivez \_ pour un tiret bas (par exemple
+%     \texttt{n\_estimators}), \% pour un pourcentage, \& pour &.
+%  7. Page de garde : placez le logo officiel de l'ENCG Settat, nommé
+%     logo_encg_settat.png, à côté de rapport.tex (ou dans figures/).
+%     Tant qu'il manque, un cadre le remplace.
+%  8. Votre photo (format identité) : placez-la à côté de rapport.tex,
+%     nommée photo_etudiant.jpg ou photo_etudiant.png. Tant qu'elle
+%     manque, un cadre la remplace.
+%  9. Lien GitHub : remplacez l'adresse dans la commande \lienDepot
+%     ci-dessous (une seule fois). Il s'affiche sur la page de garde et
+%     en annexe, en rouge tant qu'il n'est pas modifié.
+% 10. Remettez rapport.tex, rapport.pdf, le logo et la photo dans le
+%     dossier rapport/ de votre dépôt CodeApogee-Nom-Groupe.
+% =====================================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[french]{babel}
+\frenchsetup{StandardLists=true}
+\usepackage[margin=1.8cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[labelsep=colon]{caption}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage[hidelinks]{hyperref}
+
+% ========== Mise en page et commandes du gabarit (ne pas modifier) ==========
+\addto\captionsfrench{%
+  \renewcommand{\tablename}{Tableau}%
+  \renewcommand{\refname}{Références et citations}}
+\setlist{itemsep=1pt,topsep=3pt}
+\setlength{\emergencystretch}{2em}
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+  {1.2ex \@plus 0.4ex \@minus 0.2ex}{-1em}{\normalfont\normalsize\bfseries}}
+\makeatother
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\newcounter{nbacompleter}
+\DeclareRobustCommand{\acompleter}[1]{%
+  \stepcounter{nbacompleter}\textcolor{red}{\textit{SEGMENTATION DES PROFILS
+D’INVESTISSEURS À PARTIR DE LEURS
+PRÉFÉRENCES DE PLACEMENT }}}
+\DeclareRobustCommand{\acel}[1]{%
+  \stepcounter{nbacompleter}\textcolor{red}{\textit{#1}}}
+% \insererfigure{fichier}{légende}{étiquette}
+\newcommand{\insererfigure}[3]{%
+  \begin{figure}[htbp]
+    \centering
+    \IfFileExists{../figures/#1}{\includegraphics[width=0.62\linewidth]{../figures/#1}}{%
+      \IfFileExists{figures/#1}{\includegraphics[width=0.62\linewidth]{figures/#1}}{%
+        \fbox{\parbox[c][2.4cm][c]{0.6\linewidth}{\centering\small
+          Figure à insérer : \texttt{figures/\detokenize{#1}}}}}}
+    \caption{#2}
+    \label{#3}
+  \end{figure}}
+% ---------- VOTRE LIEN GITHUB : remplacez l'adresse ci-dessous ----------
+\newcommand{\lienDepot}{https://github.com/elboukilimaria4327encg-cloud/25007658_El-boukili-Maria-_FIN2.git}
+% -------------------------------------------------------------------------
+\newcommand{\lienParDefaut}{https://github.com/identifiant/CodeApogee-Nom-Groupe}
+\newcommand{\afficherlien}{%
+  \ifx\lienDepot\lienParDefaut
+    \stepcounter{nbacompleter}\textcolor{red}{\expandafter\url\expandafter{\lienDepot}}%
+  \else
+    \expandafter\url\expandafter{\lienDepot}%
+  \fi}
+% Photo de l'étudiant(e) : photo_etudiant.jpg ou photo_etudiant.png
+\newcommand{\photo}[1]{\includegraphics[width=3.5cm,height=4.5cm,keepaspectratio]{#1}}
+\newcommand{\insererphoto}{%
+  \IfFileExists{}{\photo{photo_etudiant.jpeg}}{%
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{photo_etudiant.jpeg}
+    \caption{Enter Caption}
+    \label{fig:placeholder}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{photo_etudiant.jpeg}
+    \caption{Enter Caption}
+    \label{fig:placeholder}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{WhatsApp Image 2025-11-18 at 10.19.00 PM.jpeg}
+    \caption{Enter Caption}
+    \label{fig:placeholder}
+\end{figure}
+\begin{figure}
+        \centering
+        \includegraphics[width=0.5\linewidth]{WhatsApp Image 2025-11-18 at 10.19.00 PM.jpeg}
+        \caption{Enter Caption}
+        \label{fig:placeholder}
+    \end{figure}
+        \IfFileExists{photo_etudiant.jpeg}{\photo{photo_etudiant.jpeg}}{%
+      \fbox{\parbox[c][4.5cm][c]{3.5cm}{\centering\small\textcolor{red}{\textit{Photo de\\ l'étudiant(e)}}\\[4pt]
+        \scriptsize\texttt{photo\_etudiant.jpg}}}}}}
+% Logos de la page de garde : déposez les deux fichiers à côté de rapport.tex
+% (ou dans figures/). Modifiez les noms ci-dessous si vos fichiers s'appellent autrement.
+\newcommand{\fichierlogouniv}{logo_universite_hassan1 (1).png}
+\newcommand{\fichierlogo}{logo_encg_settat (1).png}
+% \chercherimage{fichier}{options}{largeur du cadre}{hauteur du cadre}{texte du cadre}
+\newcommand{\chercherimage}[5]{%
+  \IfFileExists{#1}{\includegraphics[#2]{#1}}{%
+    \IfFileExists{figures/#1}{\includegraphics[#2]{figures/#1}}{%
+      \IfFileExists{../figures/#1}{\includegraphics[#2]{../figures/#1}}{%
+        \fbox{\parbox[c][#4][c]{#3}{\centering\small #5\\[2pt]
+          \tiny\texttt{\detokenize\expandafter{#1}}}}}}}}
+\newcommand{\insererlogouniv}{\chercherimage{\fichierlogouniv}{height=1.9cm}{5.2cm}{1.9cm}{Logo de l'Université Hassan 1\ier}}
+\newcommand{\insererlogo}{\chercherimage{\fichierlogo}{height=2.5cm}{2.5cm}{2.5cm}{Logo de l'ENCG Settat}}
+\AtEndDocument{\ifnum\value{nbacompleter}>0
+  \typeout{ATTENTION : il reste \arabic{nbacompleter} élément(s) à compléter.}\fi}
+% ===========================================================================
+
+\begin{document}
+
+% =====================================================================
+%  PAGE DE GARDE (non comptée dans la longueur du rapport)
+% =====================================================================
+\begin{titlepage}
+  \centering
+  % Logos : Université Hassan 1er à gauche, ENCG Settat à droite
+  \noindent
+  \begin{minipage}[c]{0.5\linewidth}\raggedright\insererlogouniv\end{minipage}%
+  \begin{minipage}[c]{0.5\linewidth}\raggedleft\insererlogo\end{minipage}\par
+  \vspace{0.9cm}
+  {\large Université Hassan 1\ier{} de Settat}\par
+  \vspace{0.2cm}
+  {\Large\bfseries École Nationale de Commerce et de Gestion de Settat}\par
+  \vspace{0.1cm}
+  {\large ENCG Settat}\par
+  \vspace{1.6cm}
+  \rule{\linewidth}{0.8pt}\par
+  \vspace{0.5cm}
+  {\large Cours BD \& DS : examen individuel (Partie B)}\par
+  \vspace{0.3cm}
+  {\Large Rapport de projet de science des données appliqué à la finance}\par
+  \vspace{0.7cm}
+  {\LARGE\bfseries \acompleter{FXX : titre du sujet}}\par
+  \vspace{0.5cm}
+  \rule{\linewidth}{0.8pt}\par
+  \vfill
+  \begin{minipage}[c]{0.66\linewidth}
+  \large
+  \begin{tabular}{@{}ll@{}}
+    Réalisé par          & \acel{Maria El-boukili} \\[3pt]
+    Code Apogée          & \acel{25007658} \\[3pt]
+    Groupe et filière    & \acel{2}, S7 \acel{FIN } \\[3pt]
+    Algorithme principal & \acel{Maria El-boukili ,0626516055} \\[3pt]
+    Enseignant(e)        & \acel{Mr.A.Larhlimi} \\[3pt]
+  \end{tabular}
+  \end{minipage}\hfill
+  \begin{minipage}[c]{0.3\linewidth}
+    \centering\insererphoto
+  \end{minipage}\par
+  \vspace{0.8cm}
+  {\large\textbf{Dépôt GitHub :} \afficherlien}\par
+  \vfill
+  {\large Année universitaire 2026-2027}\par
+  \vspace{0.2cm}
+  Remis le \today
+\end{titlepage}
+
+% Variante pour les figures larges (deux graphiques côte à côte)
+\newcommand{\insererfiguregrande}[3]{%
+  \begin{figure}[htbp]
+    \centering
+    \IfFileExists{../figures/#1}{\includegraphics[width=0.95\linewidth]{../figures/#1}}{%
+      \IfFileExists{figures/#1}{\includegraphics[width=0.95\linewidth]{figures/#1}}{%
+        \fbox{\parbox[c][2.4cm][c]{0.9\linewidth}{\centering\small
+          Figure à insérer : \texttt{figures/\detokenize{#1}}}}}}
+    \caption{#2}
+    \label{#3}
+  \end{figure}}
+
+% =====================================================================
+\section{Introduction}
+\label{sec:introduction}
+% =====================================================================
+\paragraph{Contexte.} Le choix d'un placement dépend du rendement attendu, du risque accepté, de la durée envisagée et des objectifs de chaque investisseur. Face à la diversité des produits disponibles (fonds communs, actions, obligations, dépôts à terme, or...), les conseillers et les établissements financiers cherchent à regrouper les clients qui se ressemblent afin d'adapter leur offre. Les méthodes d'apprentissage non supervisé permettent de faire apparaître de tels regroupements, que l'analyse descriptive seule ne rend pas toujours visibles.
+
+\paragraph{Problématique.} Peut-on identifier des groupes de répondants présentant des préférences similaires en matière de placement financier à l'aide de l'algorithme K-Means ?
+
+\paragraph{Objectif mesurable.} Comparer les partitions en $k = 2$ à $5$ groupes à l'aide du coefficient de silhouette, puis retenir une solution qui combine une silhouette satisfaisante et des groupes suffisamment interprétables, sans choisir automatiquement le $k$ qui maximise le score. Ce critère a été fixé avant l'analyse.
+
+\paragraph{Nature du problème.} Apprentissage non supervisé (segmentation, ou \emph{clustering}) : le jeu de données ne contient aucune variable cible à prédire.
+
+\paragraph{Organisation du rapport.} La section~\ref{sec:etat} présente l'état de l'art et la section~\ref{sec:travaux} les travaux liés. Les sections~\ref{sec:donnees} à~\ref{sec:protocole} décrivent les données, leur exploration, leur préparation, l'algorithme retenu et le protocole expérimental. La section~\ref{sec:resultats} présente les résultats, discutés en section~\ref{sec:discussion}, avant la conclusion (section~\ref{sec:conclusion}).
+
+% =====================================================================
+\section{État de l'art}
+\label{sec:etat}
+% =====================================================================
+La segmentation des investisseurs s'appuie sur trois familles de méthodes. La première, la plus simple, regroupe les investisseurs a priori selon des caractéristiques démographiques : l'étude de référence de Lease, Lewellen et Schlarbaum montre que des groupes définis ainsi (âge, situation) diffèrent par leurs objectifs et la composition de leur portefeuille \cite{etat1}. La deuxième est la classification hiérarchique ascendante, qui fusionne progressivement les observations les plus proches, par exemple selon le critère de Ward \cite{ward1963}. La troisième est le partitionnement par centres mobiles, dont K-Means est le représentant le plus courant \cite{macqueen1967,lloyd1982,jain2010}. La qualité d'une partition se mesure sans vérité terrain par le coefficient de silhouette \cite{rousseeuw1987}. Le tableau~\ref{tab:etat} résume ces approches.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Panorama des approches pour ce type de problème}
+  \label{tab:etat}
+  \small
+  \begin{tabular}{@{}P{3cm} P{4.3cm} P{3.5cm} P{3.5cm} l@{}}
+    \toprule
+    Approche & Principe & Atouts & Limites & Réf. \\
+    \midrule
+    Référence naïve : segmentation a priori & Former les groupes à partir d'une variable démographique (âge, sexe) & Simple, interprétable immédiatement & Suppose que la variable choisie résume les préférences & \cite{etat1} \\
+    Classification hiérarchique & Fusion successive des observations ou groupes les plus proches & Pas de nombre de groupes à fixer d'avance ; dendrogramme & Fusions définitives ; coût élevé sur de gros échantillons & \cite{ward1963} \\
+    K-Means & Minimiser la distance entre chaque observation et le centre de son groupe & Rapide, simple, adapté à une première segmentation & $k$ à fixer ; sensible à l'échelle des variables, à l'initialisation et aux groupes non sphériques & \cite{macqueen1967,jain2010,arthur2007} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% =====================================================================
+\section{Travaux liés}
+\label{sec:travaux}
+% =====================================================================
+\begin{table}[htbp]
+  \centering
+  \caption{Travaux liés}
+  \label{tab:travaux}
+  \small
+  \begin{tabular}{@{}P{2.4cm} P{2.8cm} P{2.8cm} P{3.4cm} P{3.8cm}@{}}
+    \toprule
+    Travail & Données & Méthode & Résultat principal & Différence avec ce travail \\
+    \midrule
+    Clark-Murphy et Soutar, 2005 \cite{lie1} & Enquête auprès d'investisseurs individuels en actions (Australie) & Analyse conjointe, puis analyse typologique et analyse discriminante & Quatre sous-groupes significatifs, avec des préférences et des objectifs d'investissement différents & Ici : scores déclarés pour sept catégories de placement, K-Means seul, sur 40 répondants \\
+    Kalra Sahi et Pratap Arora, 2012 \cite{lie2} & 377 investisseurs individuels en Inde, inventaire de 97 items sur les biais comportementaux & Analyse typologique (\emph{cluster analysis}) & Quatre segments d'investisseurs selon leurs biais & Ici : segmentation selon les préférences de placement, non selon les biais ; échantillon bien plus petit \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Positionnement.} Ce travail reprend l'idée, commune aux deux études, de regrouper des investisseurs par une méthode typologique plutôt que par une variable démographique unique. Il apporte une application volontairement simple (K-Means, sept scores standardisés, silhouette) sur un petit échantillon, avec une lecture prudente de ses limites.
+
+% =====================================================================
+\section{Jeu de données}
+\label{sec:donnees}
+% =====================================================================
+\begin{itemize}
+  \item \textbf{Nom et source :} \texttt{Finance\_data.csv}, enquête sur les préférences de placement, copie du jeu « finance-data » de la plateforme Kaggle (chemin \texttt{/kaggle/input/finance-data/} relevé dans le notebook) \cite{donnees}. \acel{adresse exacte (URL) du jeu à reporter}
+  \item \textbf{Date d'extraction :} \acel{jj/mm/aaaa}
+  \item \textbf{Licence ou conditions d'utilisation :} non précisée dans le fichier transmis.
+  \item \textbf{Taille :} 40 observations et 24 variables ; enquête transversale, sans dimension temporelle (donc sans fréquence ni période).
+  \item \textbf{Unité d'observation :} un répondant à l'enquête.
+  \item \textbf{Variable cible :} aucune (apprentissage non supervisé).
+  \item \textbf{Adéquation :} les sept scores donnent, pour chaque répondant, son positionnement sur les mêmes catégories de placement ; ils se prêtent donc au calcul de distances entre répondants et à une segmentation.
+  \item \textbf{Limites :} échantillon de 40 répondants âgés de 21 à 35 ans, composé de 62,5\,\% d'hommes ; données déclaratives ; signification de l'échelle des scores non documentée ; modalités très rares (« Locking Period » : 1 répondant ; durée « plus de 5 ans » : 1 répondant) ; catégories issues d'un contexte institutionnel indien (PPF).
+\end{itemize}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Dictionnaire des principales variables}
+  \label{tab:dictionnaire}
+  \small
+  \begin{tabular}{@{}l P{5.6cm} l l l c@{}}
+    \toprule
+    Variable & Description & Type & Unité & Rôle & Manquants (\%) \\
+    \midrule
+    \texttt{gender} & Sexe du répondant & catégorielle & --- & description & 0 \\
+    \texttt{age} & Âge du répondant & numérique & années & description & 0 \\
+    \texttt{Investment\_Avenues}, \texttt{Stock\_Marktet} & Investit actuellement ; investit sur le marché boursier (oui / non) & catégorielle & --- & description & 0 \\
+    \texttt{Mutual\_Funds}, \texttt{Equity\_Market}, \texttt{Debentures}, \texttt{Government\_Bonds}, \texttt{Fixed\_Deposits}, \texttt{PPF}, \texttt{Gold} & Score déclaré pour chacune des sept catégories de placement & ordinale (1 à 7) & score & segmentation & 0 \\
+    \texttt{Factor}, \texttt{Purpose}, \texttt{Duration}, \texttt{Invest\_Monitor}, \texttt{Avenue} & Facteur considéré, objectif, durée envisagée, fréquence de suivi, catégorie de placement déclarée & catégorielle & --- & description & 0 \\
+    $z_{ij}$ (créée) & Score standardisé : $z_{ij} = (x_{ij} - \mu_j)/\sigma_j$ & numérique & écart-type & segmentation & 0 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% =====================================================================
+\section{Exploration}
+\label{sec:exploration}
+% =====================================================================
+\paragraph{Statistiques descriptives.} L'échantillon compte 25 hommes (62,5\,\%) et 15 femmes (37,5\,\%). L'âge va de 21 à 35 ans, avec une moyenne de 27,8 ans, une médiane de 27 ans et un écart-type de 3,6 ans ; 27 ans est l'âge le plus fréquent (7 répondants). Tous les hommes (25 sur 25) et 12 femmes sur 15 déclarent investir ; 24 hommes sur 25 et 11 femmes sur 15 investissent en bourse (figure~\ref{fig:A1}, annexe~\ref{ann:complements}). La catégorie de placement déclarée est surtout le fonds commun (tableau~\ref{tab:avenue}). Le rendement est le facteur le plus cité (25 répondants), devant le risque (14) ; la création de richesse est l'objectif de 32 répondants sur 40 (6 pour l'épargne future, 2 pour le rendement). La durée envisagée est de 1 à 3 ans pour 18 répondants et de 3 à 5 ans pour 19 ; le suivi est mensuel pour 29 répondants, hebdomadaire pour 7 et quotidien pour 4.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Catégorie de placement déclarée (variable \texttt{Avenue})}
+  \label{tab:avenue}
+  \small
+  \begin{tabular}{@{}l r r@{}}
+    \toprule
+    Catégorie & Effectif & Part (\%) \\
+    \midrule
+    Mutual Fund & 18 & 45,0 \\
+    Equity & 10 & 25,0 \\
+    Fixed Deposits & 9 & 22,5 \\
+    Public Provident Fund & 3 & 7,5 \\
+    \midrule
+    Total & 40 & 100,0 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Qualité des données.} Le fichier ne contient aucune valeur manquante ni aucun doublon exact. Les sept scores restent compris entre 1 et 7. Aucune valeur n'a été supprimée ni imputée : sur un échantillon de 40 répondants, chaque observation compte, et une valeur extrême est ici une réponse possible de l'échelle, non une erreur. Ce contrôle d'étendue n'est pas un test statistique exhaustif des valeurs atypiques.
+
+\insererfiguregrande{fig1_genre_age.png}{Répartition des répondants selon le genre (à gauche) et selon l'âge (à droite)}{fig:1}
+
+\noindent\textbf{Lecture de la figure~\ref{fig:1}.} Les hommes sont plus nombreux que les femmes (25 contre 15). Les âges se concentrent entre 24 et 31 ans, avec un maximum à 27 ans. Les résultats décrivent les 40 répondants et ne se généralisent pas à l'ensemble des investisseurs.
+
+\insererfiguregrande{fig2_facteurs.png}{Facteur considéré dans la décision d'investir (à gauche) et selon le genre (à droite)}{fig:2}
+
+\noindent\textbf{Lecture de la figure~\ref{fig:2}.} Le rendement domine chez les hommes (16 sur 25) comme chez les femmes (9 sur 15). Le risque vient ensuite (9 hommes, 5 femmes). La modalité « Locking Period » n'est citée que par une femme : trop rare pour toute comparaison.
+
+\insererfiguregrande{fig3_duree_suivi.png}{Durée d'investissement envisagée (à gauche) et fréquence de suivi (à droite), selon le genre}{fig:3}
+
+\noindent\textbf{Lecture de la figure~\ref{fig:3}.} Les horizons de 1 à 3 ans (18 répondants) et de 3 à 5 ans (19) rassemblent 37 répondants sur 40 ; le suivi mensuel concerne 29 répondants. L'échantillon est donc plutôt orienté vers le moyen terme et un suivi peu fréquent.
+
+% =====================================================================
+\section{Préparation}
+\label{sec:preparation}
+% =====================================================================
+\begin{itemize}
+  \item \textbf{Nettoyage :} aucun traitement nécessaire (ni valeur manquante, ni doublon, scores dans l'intervalle attendu).
+  \item \textbf{Variables créées :} scores standardisés $z_{ij}$ (tableau~\ref{tab:dictionnaire}). Seules les sept variables de scores servent au calcul des distances ; les variables démographiques et catégorielles ne servent qu'à décrire les groupes.
+  \item \textbf{Encodage et mise à l'échelle :} aucun encodage (les sept variables sont numériques). Standardisation avec \texttt{StandardScaler} (centrage et réduction), nécessaire car K-Means repose sur des distances euclidiennes \cite{sklearn}.
+\end{itemize}
+
+\paragraph{Prévention des fuites.} Le problème est non supervisé : il n'y a ni cible, ni découpage apprentissage/test (40 observations seulement). Les points de contrôle du gabarit sont adaptés en conséquence.
+\begin{itemize}
+  \item[$\boxtimes$] Aucune variable ne contient une cible, même indirectement : il n'y a pas de cible.
+  \item[$\boxtimes$] Seules les sept variables de scores entrent dans le calcul ; les variables descriptives (âge, genre, objectif...) en sont exclues.
+  \item[$\boxtimes$] Graine aléatoire fixée (\texttt{random\_state=42}) pour la reproductibilité.
+  \item[$\square$] Découpage chronologique, ensemble de test : sans objet (données non datées, échantillon trop petit) ; la qualité est évaluée en interne par la silhouette.
+\end{itemize}
+Contrôle d'intégrité effectué avant le calcul : 40 lignes, 24 colonnes, aucune valeur manquante, scores compris entre 1 et 7.
+
+% =====================================================================
+\section{Algorithme}
+\label{sec:algorithme}
+% =====================================================================
+\paragraph{Choix.} K-Means (algorithme de partitionnement non supervisé, scikit-learn \cite{sklearn}), retenu pour sa simplicité, sa lisibilité et son adéquation à une première segmentation exploratoire (tableau~\ref{tab:etat}). Une classification supervisée a été écartée faute de variable cible et en raison de la taille de l'échantillon ; la classification hiérarchique \cite{ward1963} reste une alternative plausible, proposée comme piste d'amélioration.
+
+\paragraph{Principe.} L'algorithme se déroule en cinq étapes : (1) fixer le nombre de groupes $k$ ; (2) initialiser $k$ centres (l'implémentation de scikit-learn utilise par défaut l'initialisation \emph{k-means++} \cite{arthur2007}) ; (3) affecter chaque observation au centre le plus proche ; (4) recalculer chaque centre comme la moyenne des observations de son groupe ; (5) répéter les étapes 3 et 4 jusqu'à stabilisation des groupes \cite{lloyd1982}. L'implémentation s'appuie sur \texttt{KMeans} de scikit-learn \cite{sklearn}, dans la démarche du support du cours \cite{support}.
+
+\paragraph{Formule essentielle.}
+\begin{equation}
+  J = \sum_{i=1}^{n} \sum_{j=1}^{k} r_{ij}\,\lVert z_i - \mu_j \rVert^{2}
+  \label{eq:principale}
+\end{equation}
+où $n$ est le nombre d'observations (40), $k$ le nombre de groupes, $z_i$ le vecteur des sept scores standardisés du répondant $i$, $\mu_j$ le centre du groupe $j$ et $r_{ij}$ vaut 1 si le répondant $i$ appartient au groupe $j$, 0 sinon (chaque répondant n'appartient qu'à un seul groupe).
+
+\paragraph{Paramètres appris.} Les centres $\mu_j$ et l'affectation $r_{ij}$ de chaque répondant ; $k$ n'est pas appris mais choisi par comparaison de silhouettes.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Hyperparamètres étudiés}
+  \label{tab:hyper}
+  \small
+  \begin{tabular}{@{}l P{6.4cm} l l@{}}
+    \toprule
+    Hyperparamètre & Rôle et effet attendu & Valeurs testées & Valeur retenue \\
+    \midrule
+    \texttt{n\_clusters} & Nombre de groupes : plus il est grand, plus les groupes sont homogènes mais petits & 2, 3, 4, 5 & 3 \\
+    \texttt{n\_init} & Nombre d'initialisations indépendantes, la meilleure étant conservée : limite le risque d'un mauvais optimum local & 20 (fixé) & 20 \\
+    \texttt{random\_state} & Graine aléatoire, pour reproduire les résultats & 42 (fixé) & 42 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% =====================================================================
+\section{Protocole expérimental}
+\label{sec:protocole}
+% =====================================================================
+\begin{table}[htbp]
+  \centering
+  \caption{Utilisation des données}
+  \label{tab:decoupage}
+  \small
+  \begin{tabular}{@{}l P{9.5cm} r@{}}
+    \toprule
+    Ensemble & Rôle & Observations \\
+    \midrule
+    Apprentissage & Standardisation, ajustement de K-Means et calcul de la silhouette sur l'ensemble des répondants & 40 \\
+    Validation & Aucune : comparaison interne des valeurs de $k$ par la silhouette & --- \\
+    Test & Aucun : échantillon trop petit pour être découpé & --- \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{itemize}
+  \item \textbf{Référence naïve :} une affectation au hasard des répondants à des groupes, dont la silhouette attendue est proche de 0 (absence de structure). Elle est pertinente car un partitionnement n'a d'intérêt que s'il fait mieux que le hasard.
+  \item \textbf{Validation :} pas de validation croisée ; quatre configurations comparées ($k = 2$ à $5$), chacune avec 20 initialisations.
+  \item \textbf{Métrique principale :} coefficient de silhouette moyen, sans unité, compris entre $-1$ et $1$. Pour l'observation $i$, $s(i) = \dfrac{b(i) - a(i)}{\max\{a(i),\,b(i)\}}$, où $a(i)$ est la distance moyenne aux autres observations de son groupe et $b(i)$ la distance moyenne au groupe voisin le plus proche \cite{rousseeuw1987}. Il convient car il évalue cohésion et séparation sans connaître de « bonne » réponse. Repère usuel de Kaufman et Rousseeuw : en dessous de 0,25, pas de structure substantielle ; de 0,26 à 0,50, structure faible \cite{kr1990}.
+  \item \textbf{Métriques secondaires :} effectif de chaque groupe, et lisibilité des profils moyens par groupe.
+  \item \textbf{Graine aléatoire :} 42.
+\end{itemize}
+
+% =====================================================================
+\section{Résultats}
+\label{sec:resultats}
+% =====================================================================
+\begin{table}[htbp]
+  \centering
+  \caption{Coefficient de silhouette selon le nombre de groupes}
+  \label{tab:resultats}
+  \small
+  \begin{tabular}{@{}c c P{9cm}@{}}
+    \toprule
+    $k$ & Silhouette & Remarque \\
+    \midrule
+    Référence : hasard & $\approx 0$ & Valeur attendue en l'absence de structure (non calculée) \\
+    2 & 0,3903 & --- \\
+    3 & 0,4273 & Solution retenue ; groupes de 30, 6 et 4 répondants \\
+    4 & 0,4571 & Silhouette maximale, mais un groupe de 2 observations \\
+    5 & 0,3093 & Silhouette la plus faible \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\insererfigure{fig4_silhouette.png}{Coefficient de silhouette selon le nombre de groupes ($k = 3$ retenu ; trait pointillé : 0,25)}{fig:4}
+
+\paragraph{Lecture des résultats.} La silhouette atteint son maximum pour $k=4$ (0,4571), mais cette partition isole un groupe de seulement deux observations. La partition en $k=3$ (0,4273) est légèrement inférieure et reste nettement meilleure que $k=5$ (0,3093) ; elle est retenue comme compromis entre séparation et interprétabilité (tableau~\ref{tab:resultats}, figure~\ref{fig:4}). Toutes les valeurs se situent dans la zone de structure faible du repère de Kaufman et Rousseeuw \cite{kr1990} : la segmentation est exploitable, mais ne révèle pas de groupes nettement séparés.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Répartition des répondants par groupe ($k = 3$)}
+  \label{tab:illustration}
+  \small
+  \begin{tabular}{@{}l r r@{}}
+    \toprule
+    Groupe & Répondants & Part (\%) \\
+    \midrule
+    Cluster 0 & 30 & 75,0 \\
+    Cluster 1 & 6 & 15,0 \\
+    Cluster 2 & 4 & 10,0 \\
+    \midrule
+    Total & 40 & 100,0 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\insererfigure{fig5_heatmap_profils.png}{Carte thermique des scores moyens des sept catégories de placement, par groupe}{fig:5}
+
+\insererfigure{fig6_acp_clusters.png}{Représentation des trois groupes sur les deux premières composantes principales}{fig:6}
+
+\paragraph{Profils des groupes.} \acel{reporter ici les scores moyens lus sur la figure~\ref{fig:5} (catégories aux scores relativement élevés ou faibles de chaque groupe) et la part de variance expliquée par les deux composantes de la figure~\ref{fig:6}, à calculer avec le script fourni}
+
+\paragraph{Analyse des groupes.} La répartition est déséquilibrée : un groupe majoritaire (75\,\% des répondants) et deux groupes de 6 et 4 répondants, dont les profils doivent être lus avec prudence. L'ACP \cite{jolliffe2016} sert uniquement à visualiser : la projection sur deux dimensions perd de l'information et ne remplace pas la silhouette.
+
+% =====================================================================
+\section{Discussion des résultats}
+\label{sec:discussion}
+% =====================================================================
+\paragraph{Réponse à l'objectif.} L'objectif fixé dans l'introduction est atteint sur le plan méthodologique : quatre valeurs de $k$ ont été comparées et $k=3$ retenu pour un compromis entre une silhouette de 0,4273 et des groupes interprétables. Il l'est de façon modérée sur le fond, car cette silhouette correspond à une structure faible.
+
+\paragraph{Interprétation.} Le fait que la silhouette maximale ($k=4$) passe par un groupe de deux observations suggère que les petits groupes captent des répondants atypiques plutôt que des segments stables. Les groupes décrivent des profils de réponses similaires, sans expliquer leurs causes : il s'agit d'associations, non de causalité. De plus, sur les cinq premières lignes du fichier, les sept scores forment chacune une permutation de 1 à 7, ce qui évoque un classement des catégories plutôt qu'une note indépendante pour chacune ; à confirmer dans la documentation du questionnaire, car un score élevé ne signifie pas automatiquement une préférence plus forte.
+
+\paragraph{Surapprentissage et généralisation.} Il n'y a ni jeu de test ni score d'apprentissage à comparer : la silhouette est calculée sur les 40 répondants ayant servi à l'ajustement. La stabilité des groupes selon la graine ou selon un sous-échantillon n'a pas été testée, ce qui limite la portée des résultats.
+
+\paragraph{Comparaison avec les travaux liés.} Clark-Murphy et Soutar \cite{lie1} et Kalra Sahi et Pratap Arora \cite{lie2} trouvent chacun quatre segments (tableau~\ref{tab:travaux}), là où ce travail en retient trois. L'écart n'est pas une contradiction : leurs échantillons sont bien plus grands (377 investisseurs pour le second), leurs variables et leurs méthodes diffèrent. Les résultats concordent sur un point : les investisseurs ne forment pas un ensemble homogène.
+
+\paragraph{Limites et biais.} Échantillon de 40 répondants jeunes (21 à 35 ans) et majoritairement masculins ; données déclaratives et transversales ; échelle des scores non documentée ; biais de sélection possible dans la constitution de l'échantillon. K-Means suppose des groupes compacts et est sensible aux valeurs atypiques et à l'initialisation \cite{jain2010}.
+
+\paragraph{Pistes d'amélioration.} (1) Comparer K-Means à la classification hiérarchique \cite{ward1963} et mesurer la concordance des partitions. (2) Évaluer la stabilité des groupes par ré-échantillonnage et sur un échantillon plus grand, accompagné de la documentation complète du questionnaire.
+
+% =====================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+% =====================================================================
+Il est possible d'identifier des groupes de répondants aux préférences de placement différentes : K-Means, appliqué à sept scores standardisés, aboutit à trois groupes (30, 6 et 4 répondants) pour une silhouette de 0,4273, ce qui traduit une structure faible. Le travail apporte une première segmentation exploratoire, reproductible (graine 42) et accompagnée de ses limites : taille de l'échantillon, données déclaratives, échelle des scores à documenter. Il ouvre sur une comparaison avec la classification hiérarchique et sur un test de stabilité avec un échantillon plus large.
+
+% =====================================================================
+%  RÉFÉRENCES ET CITATIONS
+% =====================================================================
+\begin{thebibliography}{99}
+  \bibitem{donnees} Jeu de données « finance-data » (fichier \texttt{Finance\_data.csv}), plateforme Kaggle, chemin relevé dans le notebook : \texttt{/kaggle/input/finance-data/}, consulté le \acel{jj/mm/aaaa}.
+  \bibitem{etat1} R.~C. Lease, W.~G. Lewellen et G.~G. Schlarbaum, « Market Segmentation: Evidence on the Individual Investor », \textit{Financial Analysts Journal}, vol.~32, n\textsuperscript{o}~5, 1976.
+  \bibitem{lie1} M.~Clark-Murphy et G.~N. Soutar, « Individual Investor Preferences: A Segmentation Analysis », \textit{Journal of Behavioral Finance}, vol.~6, n\textsuperscript{o}~1, p.~6-14, 2005.
+  \bibitem{lie2} S.~Kalra Sahi et A.~Pratap Arora, « Individual Investor Biases: A Segmentation Analysis », \textit{Qualitative Research in Financial Markets}, vol.~4, n\textsuperscript{o}~1, p.~6-25, 2012.
+  \bibitem{macqueen1967} J.~MacQueen, « Some Methods for Classification and Analysis of Multivariate Observations », \textit{Proceedings of the 5th Berkeley Symposium on Mathematical Statistics and Probability}, vol.~1, p.~281-297, 1967.
+  \bibitem{lloyd1982} S.~P. Lloyd, « Least Squares Quantization in PCM », \textit{IEEE Transactions on Information Theory}, vol.~28, n\textsuperscript{o}~2, p.~129-137, 1982.
+  \bibitem{arthur2007} D.~Arthur et S.~Vassilvitskii, « k-means++: The Advantages of Careful Seeding », \textit{Proceedings of the 18th ACM-SIAM Symposium on Discrete Algorithms (SODA)}, p.~1027-1035, 2007.
+  \bibitem{jain2010} A.~K. Jain, « Data Clustering: 50 Years Beyond K-Means », \textit{Pattern Recognition Letters}, vol.~31, n\textsuperscript{o}~8, p.~651-666, 2010.
+  \bibitem{ward1963} J.~H. Ward, « Hierarchical Grouping to Optimize an Objective Function », \textit{Journal of the American Statistical Association}, vol.~58, n\textsuperscript{o}~301, p.~236-244, 1963.
+  \bibitem{rousseeuw1987} P.~J. Rousseeuw, « Silhouettes: A Graphical Aid to the Interpretation and Validation of Cluster Analysis », \textit{Journal of Computational and Applied Mathematics}, vol.~20, p.~53-65, 1987.
+  \bibitem{kr1990} L.~Kaufman et P.~J. Rousseeuw, \textit{Finding Groups in Data: An Introduction to Cluster Analysis}, Wiley, 1990.
+  \bibitem{jolliffe2016} I.~T. Jolliffe et J.~Cadima, « Principal Component Analysis: A Review and Recent Developments », \textit{Philosophical Transactions of the Royal Society A}, vol.~374, n\textsuperscript{o}~2065, 2016.
+  \bibitem{sklearn} F.~Pedregosa \textit{et al.}, « Scikit-learn: Machine Learning in Python », \textit{Journal of Machine Learning Research}, vol.~12, p.~2825-2830, 2011.
+  \bibitem{support} Support du cours BD \& DS, notebook \texttt{Tp\_ML.ipynb}, ENCG-2026.
+\end{thebibliography}
+
+% =====================================================================
+%  ANNEXES
+% =====================================================================
+\appendix
+
+\section{Reproduction}
+\label{ann:reproduction}
+Version corrigée : étiquette \texttt{remise-finale} du dépôt \afficherlien.
+\begin{enumerate}
+  \item Cloner le dépôt : \texttt{git clone} suivi du lien ci-dessus.
+  \item Installer les dépendances : \texttt{pip install -r requirements.txt}.
+  \item Exécuter \texttt{notebooks/NoteBook\_Projet.ipynb} avec « Redémarrer et tout exécuter ».
+\end{enumerate}
+
+\section{Tableaux et figures complémentaires}
+\label{ann:complements}
+\insererfiguregrande{figA1_avenues_genre.png}{Investissement actuel (à gauche) et investissement en bourse (à droite), selon le genre}{fig:A1}
+
+\insererfiguregrande{figA2_age_objectif.png}{Âge moyen des répondants selon l'objectif déclaré (barres : intervalle de confiance)}{fig:A2}
+
+La figure~\ref{fig:A2} montre un âge moyen un peu plus élevé pour l'objectif « Returns » (environ 30 ans) que pour « Wealth Creation » (environ 27,5 ans), mais « Returns » ne compte que 2 répondants : l'intervalle est très large et aucune tendance ne peut en être déduite.
+
+\section{Déclaration des outils d'IA}
+\label{ann:ia}
+\begin{table}[htbp]
+  \centering
+  \caption{Ressources et outils d'IA utilisés}
+  \label{tab:ia}
+  \small
+  \begin{tabular}{@{}P{3cm} P{4.8cm} P{3.3cm} P{4.4cm}@{}}
+    \toprule
+    Outil ou ressource & Usage précis & Parties concernées & Vérification effectuée \\
+    \midrule
+    Claude (Anthropic), novembre 2026 & Aide à la rédaction du rapport et à sa mise en forme LaTeX, assemblage des figures du notebook, graphique de silhouette, recherche de références & Sections 1 à 11, annexes & Chiffres recoupés avec les sorties du notebook et le rapport PDF ; références et résultats des travaux liés contrôlés par recherche web \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\end{document}
